@@ -14,10 +14,9 @@
 
 // Execute `rustlings hint hashmaps3` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
-
 use std::collections::HashMap;
 
+#[derive(PartialEq)]
 // A structure to store team name and its goal details.
 struct Team {
     name: String,
@@ -38,8 +37,36 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         // TODO: Populate the scores table with details extracted from the
         // current line. Keep in mind that goals scored by team_1
         // will be number of goals conceded from team_2, and similarly
-        // goals scored by team_2 will be the number of goals conceded by
-        // team_1.
+        // goals scored by team_2 will be the number of goals conceded by team_1.
+        // Use the `entry()` and `or_insert()` methods of `HashMap` to insert entries corresponding to each team in the scores table.
+        if scores.get(&team_1_name) == None {
+            scores.insert(team_1_name.clone(),
+                          Team {
+                              name: team_1_name.clone(), 
+                              goals_scored: 0, 
+                              goals_conceded: 0,
+                          });
+        }
+
+        if scores.get(&team_2_name) == None {
+            scores.insert(team_2_name.clone(),
+                          Team {
+                              name: team_2_name.clone(), 
+                              goals_scored: 0, 
+                              goals_conceded: 0,
+                          });
+        }
+        
+        if let Some(team) = scores.get_mut(&team_1_name) {
+            team.goals_scored += team_1_score;
+            team.goals_conceded += team_2_score;
+        }
+        
+        if let Some(team) = scores.get_mut(&team_2_name) {
+            team.goals_scored += team_2_score;
+            team.goals_conceded += team_1_score;
+        }
+
     }
     scores
 }
