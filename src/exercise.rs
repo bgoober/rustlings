@@ -2,7 +2,7 @@ use regex::Regex;
 use serde::Deserialize;
 use std::env;
 use std::fmt::{self, Display, Formatter};
-use std::fs::{self, remove_file, File};
+use std::fs::{self, File, remove_file};
 use std::io::Read;
 use std::path::PathBuf;
 use std::process::{self, Command};
@@ -154,7 +154,7 @@ path = "{}.rs""#,
                 Command::new("cargo")
                     .args(&["clippy", "--manifest-path", CLIPPY_CARGO_TOML_PATH])
                     .args(RUSTC_COLOR_ARGS)
-                    .args(&["--", "-D", "warnings","-D","clippy::float_cmp"])
+                    .args(&["--", "-D", "warnings", "-D", "clippy::float_cmp"])
                     .output()
             }
         }
@@ -261,8 +261,9 @@ fn clean() {
 
 #[cfg(test)]
 mod test {
-    use super::*;
     use std::path::Path;
+
+    use super::*;
 
     #[test]
     fn test_clean() {
