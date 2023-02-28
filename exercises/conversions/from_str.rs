@@ -6,6 +6,7 @@
 // You can read more about it at https://doc.rust-lang.org/std/str/trait.FromStr.html
 // Execute `rustlings hint from_str` or use the `hint` watch subcommand for a hint.
 
+use ParsePersonError::{BadLen, Empty, NoName, ParseInt};
 use std::num::ParseIntError;
 use std::str::FromStr;
 
@@ -28,8 +29,6 @@ enum ParsePersonError {
     ParseInt(ParseIntError),
 }
 
-// I AM NOT DONE
-
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
 // 2. Split the given string on the commas present in it
@@ -43,9 +42,25 @@ enum ParsePersonError {
 // As an aside: `Box<dyn Error>` implements `From<&'_ str>`. This means that if you want to return a
 // string error message, you can do so via just using return `Err("my error message".into())`.
 
+// Using ParsePersonError::{Empty, BadLen, NoName, ParseInt} above
 impl FromStr for Person {
     type Err = ParsePersonError;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        if s.is_empty() {
+            Err(Empty) // i.e., Err(ParsePersonError::Empty)
+        } else {
+            let p: Vec<&str> = s.split(',').collect();
+            if p.len() != 2 {
+                Err(BadLen)
+            } else if p[0].len() == 0 {
+                Err(NoName)
+            } else {
+                match p[1].parse::<usize>() {
+                    Ok(a) => Ok(Person { name: p[0].to_string(), age: a }),
+                    Err(a) => Err(ParseInt(a)),
+                }
+            }
+        }
     }
 }
 
